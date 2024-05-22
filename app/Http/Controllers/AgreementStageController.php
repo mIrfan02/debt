@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Services\AgreementStageService;
+use App\Http\Requests\AgreementStageRequest;
+
+class AgreementStageController extends Controller
+{
+    private $_service = null;
+    private $_directory = 'auth/pages/agreementstages';
+    private $_route = 'agreementstages';
+
+
+    public function __construct()
+
+    {
+        $this->_service = new AgreementStageService();
+    }
+
+
+    public function index()
+
+    {
+        $data['all'] = $this->_service->index();
+        return view($this->_directory . '.all', compact('data'));
+    }
+
+
+    public function create()
+
+    {
+        return view($this->_directory . '.create');
+    }
+
+
+    public function store(AgreementStageRequest $request)
+
+    {
+        try {
+            $this->_service->store($request->validated());
+            return redirect()->route($this->_route . '.index')->with('success', 'Something went wrong.');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->route($this->_route . '.index')->with('error', 'Something went wrong.');
+        }
+    }
+
+
+    public function show($id)
+
+    {
+        $data = $this->_service->show($id);
+        return view($this->_directory . '.show', compact('data'));
+    }
+
+
+    public function edit($id)
+
+    {
+        $data = $this->_service->show($id);
+        return view($this->_directory . '.edit', compact('data'));
+    }
+
+
+    public function update(AgreementStageRequest $request, $id)
+
+    {
+        try {
+            $this->_service->update($id, $request->validated());
+            return redirect()->route($this->_route . '.index')->with('success', 'Something went wrong.');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->route($this->_route . '.index')->with('error', 'Something went wrong.');
+        }
+    }
+
+
+    public function destroy($id)
+
+    {
+        try {
+            $this->_service->destroy($id);
+            return redirect()->route($this->_route . '.index');
+        } catch (\Throwable $th) {
+            // throw $th;
+            return redirect()->route($this->_route . '.index')->with('error', 'Something went wrong.');
+        }
+    }
+}
