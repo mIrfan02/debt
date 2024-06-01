@@ -1,7 +1,16 @@
 <x-auth-layout pageTitle="Create Payment">
+    <a href="{{ route('claims.show', $claimId) }}" title="View claims details"
+    class="btn btn-sm btn-outline-info">
+   Back To Claim Detail
+</a>
 
     <x-front.card>
+        <a href="{{ route('claims.show', $claimId) }}" title="View claims details"
+                class="btn btn-outline-info">
+               Back To Claim Detail
+            </a>
         <div class="container">
+
 
             <form action="{{ route('payments.store') }}" method="post">
                 @csrf

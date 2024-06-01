@@ -39,9 +39,10 @@ class PaymentController extends Controller
     public function store(PaymentRequest $request)
 
     {
+        $claimid=$request->claim_id;
         try {
             $this->_service->store($request->validated());
-            return redirect()->back()->with('success', 'Payments Added Successfully.');
+            return redirect()->route('claims.show',$claimid)->with('success', 'Payments Added Successfully.');
         } catch (\Throwable $th) {
             //throw $th;
             return redirect()->back()->with('error', 'Something went wrong.');

@@ -90,6 +90,8 @@ class PlacementService
 
     public function store($data)
     {
+        dd($data);
+        die;
         $claimId = $data['claim_id'];
 
         // Separate the sliding scale data from the main data array

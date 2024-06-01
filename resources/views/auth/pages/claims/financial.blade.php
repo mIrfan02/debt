@@ -190,21 +190,17 @@
 
                         @php $dataArray = is_string($log->data) ? json_decode($log->data, true) : $log->data; @endphp
 
-                        @if ($log->log_type == 'Ad-Cost')
-                        <td>{{ $dataArray['cost_amount'] ?? '.' }}</td>
 
-                        @else
-                        <td>{{ $dataArray['amount'] ?? '.' }}</td>
+                        <td>{{ $dataArray['amount'] ?? '' }}</td>
 
-                        @endif
-                        <td>{{ $dataArray['rate'] ?? '.' }}</td>
+                        <td>{{ $dataArray['rate'] ?? '' }}</td>
 
 
+                        <td>{{ $dataArray['deducted_cost']  ?? 'N/A'}}</td>
                         <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ $dataArray['deducted_principle'] ?? ''}}    </td>
 
-                        <td></td>
+                        <td>  {{ $dataArray['deducted_cost']  ?? 'N/A'}}  </td>
                         <td>
                             @if (isset($dataArray['amount']) && $log->log_type == 'payment')
                                 {{ $dataArray['agency'] }}

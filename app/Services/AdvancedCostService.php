@@ -28,6 +28,7 @@ class AdvancedCostService
 
 
     public function store($data)
+
     {
         // Find the claim by ID or fail if it doesn't exist
         $advanceCost = Claim::findOrFail($data['claim_id']);
@@ -36,6 +37,7 @@ class AdvancedCostService
         $advanceCost->remaining_cost += $data['cost_amount'];
         $advanceCost->save();
 
+        $data['amount']=$data['cost_amount'];
         // Log the allocation
         $logData = [
             'log_type' => 'Ad-Cost',

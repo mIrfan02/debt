@@ -303,8 +303,9 @@
              </div>
          </div>
          <h4>Additions to Placement</h4>
-         <div id="container">
-             <div class="row">
+         <div id="additionFieldsContainer">
+             <!-- Initial Row -->
+             <div class="row" data-row-index="1">
                  <div class="mb-3 col-md-2">
                      <label for="principal_name" class="form-label"> Name:</label>
                      <input type="text" name="name[]" class="form-control" value="Addition#01" readonly>
@@ -313,18 +314,15 @@
                      <label for="principal_amount" class="form-label"> Amount:</label>
                      <input type="number" name="amount[]" class="form-control">
                  </div>
-
                  <div class="mb-3 col-md-2">
                      <label for="principal_rate" class="form-label"> Rate:</label>
                      <input type="number" name="rate[]" class="form-control" min="0" max="100"
                          step="0.01">
                  </div>
-
                  <div class="mb-3 col-md-2">
                      <label for="principal_date" class="form-label"> Date:</label>
                      <input type="date" name="date[]" class="form-control">
                  </div>
-
                  <div class="mb-3 col-md-2">
                      <label for="principal_comments" class="form-label"> Comments:</label>
                      <input type="text" name="comments[]" class="form-control" />
@@ -333,30 +331,62 @@
              </div>
          </div>
 
+         <!-- Plus Button -->
+         <div class="row">
+             <div class="col-md-6">
+                 <button type="button" id="addAdditionField" class="btn btn-primary mb-3">
+                     <i class="fa fa-plus"></i> Add
+                 </button>
 
-         {{-- <div class="mb-3 col-md-2" style="margin-left: auto">
-             <button type="button" onclick="addRow()" class="btn btn-primary">+</button>
-         </div> --}}
+             </div>
 
-         <button type="submit" class="btn btn-primary">Submit</button>
+             <div class="col-md-6">
+                 <button type="submit" class="btn btn-primary">Submit</button>
+
+             </div>
+         </div>
      </form>
  </x-front.card>
 
  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script>
-     let counter = 1;
+     let additionFieldCount = 1;
 
-     function addRow() {
-         const container = document.getElementById('container');
-         const newRow = container.firstElementChild.cloneNode(true);
-         const inputs = newRow.querySelectorAll('input[name^="name"]');
+     document.getElementById("addAdditionField").addEventListener("click", function() {
+         additionFieldCount++;
 
-         inputs.forEach(input => {
-             input.value = `Addition#${++counter}`;
-         });
+         // Pad the additionFieldCount to ensure it has two digits
+         const paddedCount = ("0" + additionFieldCount).slice(-2);
 
-         container.appendChild(newRow);
-     }
+         const additionFields = document.createElement("div");
+         additionFields.innerHTML = `
+        <div class="row">
+            <div class="mb-3 col-md-2">
+                <label for="principal_name_${paddedCount}" class="form-label">Name:</label>
+                <input type="text" name="name[]" id="principal_name_${paddedCount}" class="form-control" value="Addition#${paddedCount}" readonly>
+            </div>
+            <div class="mb-3 col-md-2">
+                <label for="principal_amount_${paddedCount}" class="form-label">Amount:</label>
+                <input type="number" name="amount[]" id="principal_amount_${paddedCount}" class="form-control">
+            </div>
+            <div class="mb-3 col-md-2">
+                <label for="principal_rate_${paddedCount}" class="form-label">Rate:</label>
+                <input type="number" name="rate[]" id="principal_rate_${paddedCount}" class="form-control" min="0" max="100" step="0.01">
+            </div>
+            <div class="mb-3 col-md-2">
+                <label for="principal_date_${paddedCount}" class="form-label">Date:</label>
+                <input type="date" name="date[]" id="principal_date_${paddedCount}" class="form-control">
+            </div>
+            <div class="mb-3 col-md-2">
+                <label for="principal_comments_${paddedCount}" class="form-label">Comments:</label>
+                <input type="text" name="comments[]" id="principal_comments_${paddedCount}" class="form-control" />
+            </div>
+           
+        </div>
+    `;
+
+         document.getElementById("additionFieldsContainer").appendChild(additionFields);
+     });
  </script>
  <script>
      function updateRate(rateFieldId) {
