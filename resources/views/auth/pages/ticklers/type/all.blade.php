@@ -20,6 +20,28 @@
                     data-bs-target="#TicklerTypeModal" type="button">Add</button>
                 </a>
             </div>
+            <div class="modal fade" id="TicklerTypeModal" tabindex="-1"
+                                aria-labelledby="TicklerTypeModal" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <form action="{{ route('debtors.ticklers.save.type') }}"
+                                                method="POST">
+                                                @csrf
+
+                                                <div class="form-group">
+                                                    <label for="message">Tickler Type</label>
+                                                    <textarea class="form-control" id="type" name="type" rows="3" placeholder="Enter your type here"></textarea>
+                                                </div>
+
+                                                <button type="button" class="btn btn-secondary mt-3"
+                                                    data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-primary mt-3">save</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
         </div>
         <table id="myTable" class="table table-hover border">
             <thead>
@@ -83,28 +105,7 @@
                                 </div>
                             </div>
 
-                            <div class="modal fade" id="TicklerTypeModal" tabindex="-1"
-                                aria-labelledby="TicklerTypeModal" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-body">
-                                            <form action="{{ route('debtors.ticklers.save.type') }}"
-                                                method="POST">
-                                                @csrf
 
-                                                <div class="form-group">
-                                                    <label for="message">Tickler Type</label>
-                                                    <textarea class="form-control" id="type" name="type" rows="3" placeholder="Enter your type here"></textarea>
-                                                </div>
-
-                                                <button type="button" class="btn btn-secondary mt-3"
-                                                    data-bs-dismiss="modal">Cancel</button>
-                                                <button type="submit" class="btn btn-primary mt-3">save</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </td>
                     </tr>
                 @endforeach

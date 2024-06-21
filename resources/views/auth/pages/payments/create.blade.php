@@ -18,7 +18,7 @@
 
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="payment_method">Payment Method</label>
+                        <label for="payment_method">Payment Method </label>
                         <select name="payment_method" class="form-control">
                             <option value="">Select Payment Method</option>
                             @foreach (['Cash', 'Check', 'Credit Card', 'Direct Debit', 'Money Order', 'Cashier\'s Check', 'Government Check', 'Garnishment'] as $method)
@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label for="amount">Amount</label>
+                        <label for="amount">Amount <span class="text-danger">*</span></label>
                         <input type="number" name="amount" class="form-control">
                         @error('amount')
                             <span class="text-danger">{{ $message }}</span>
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label for="date_paid">Date Paid</label>
+                        <label for="date_paid">Date Paid <span class="text-danger">*</span></label>
                         <input type="date" name="date_paid" class="form-control">
                         @error('date_paid')
                             <span class="text-danger">{{ $message }}</span>

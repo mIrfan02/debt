@@ -90,8 +90,7 @@ class PlacementService
 
     public function store($data)
     {
-        dd($data);
-        die;
+
         $claimId = $data['claim_id'];
 
         // Separate the sliding scale data from the main data array
@@ -100,7 +99,7 @@ class PlacementService
 
         // Store placement data
         $placement = $this->add($this->_model, $data);
-
+       
 
         $logInterest = [
             'log_type' => 'Interest Start Date',

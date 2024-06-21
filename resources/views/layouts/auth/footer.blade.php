@@ -12,6 +12,8 @@
     {{ $scripts }}
 @endisset
 
+{{-- testing --}}
+
 </body>
 
 </html>

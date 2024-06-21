@@ -313,10 +313,9 @@
         </div>
 
 
-        {{-- Notes section latest some notes in table --}}
 
     </div>
-    <div class="container mt-5">
+    {{-- <div class="container mt-5">
         <h2 style="text-shadow: 0px 10px 4px rgba(0, 0, 0, 0.4);">Notes</h2>
         <table class="table table-hover">
             <thead>
@@ -340,10 +339,7 @@
                             <td>{{ $note->note }}</td>
                             <td>{{ $note->review_date }}</td>
                             <td>
-                                {{-- <a href="{{ route('notes.edit', $note->id) }}"
-                                    title="Edit {{ $note->title }} detail" class="btn btn-sm btn-outline-warning">
-                                    <i class="fa fa-edit"></i>
-                                </a> --}}
+
                                 <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal"
                                     data-bs-target="#editModal{{ $note->id }}">
                                     <i class="fa fa-edit"></i> Edit
@@ -398,10 +394,10 @@
 
             </tbody>
         </table>
-    </div>
+    </div> --}}
 
 
-    <div class="container mt-5">
+    {{-- <div class="container mt-5">
         <div class="d-flex justify-content-between">
             <h1>Payments</h1>
             <button type="button" class="btn btn-success mt-2 mb-2" data-bs-toggle="modal"
@@ -531,10 +527,10 @@
             {{ $data->payments()->paginate(2)->links() }}
         </div>
 
-    </div>
+    </div> --}}
 
 
-    <div class="container mt-5">
+    {{-- <div class="container mt-5">
         <div class="d-flex justify-content-between">
             <h1>Cost</h1>
             <button type="button" class="btn btn-success mt-2 mb-2" data-bs-toggle="modal"
@@ -669,7 +665,7 @@
             {{ $data->costs()->paginate(2)->links() }}
         </div>
 
-    </div>
+    </div> --}}
 
 
 

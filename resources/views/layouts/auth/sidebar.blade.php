@@ -6,8 +6,15 @@
     </a>
     <div class="sidebar-content">
         <div class="sidebar-user">
-            <img src="{{ auth()->user()->imageUrl() == ''? Vite::asset('resources/assets/dashboard/img/avatars/undraw_profile.svg'): asset(auth()->user()->imageUrl()) }}"
+            {{-- <img src="{{ auth()->user()->imageUrl() == ''? Vite::asset('resources/assets/dashboard/img/avatars/undraw_profile.svg'): asset(auth()->user()->imageUrl()) }}"
+                class="img-fluid rounded-circle mb-2" alt="{{ auth()->user()->name }} profile" /> --}}
+
+                <img src="{{ auth()->user()->imageUrl() ? asset(auth()->user()->imageUrl()) : asset('assets/img/undraw_profile.svg') }}"
                 class="img-fluid rounded-circle mb-2" alt="{{ auth()->user()->name }} profile" />
+
+
+
+
             <div class="fw-bold">{{ auth()->user()->name }}</div>
             <small>Welcome to {{ ucfirst(auth()->user()->roles[0]->name) }} panel</small>
         </div>

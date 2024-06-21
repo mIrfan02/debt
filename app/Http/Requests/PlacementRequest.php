@@ -31,7 +31,7 @@ class PlacementRequest extends FormRequest
             'interest_start_date' => 'required|date',
             'allocation_method' => 'required|string',
             'interest_rate' => 'required|string',
-            'debt_type' => 'required|string',
+            'debt_type' => 'nullable|string',
 
             'sliding_scale' => 'nullable|array', // Validate sliding_scale as an array
             'sliding_scale.*.percentage' => 'nullable|numeric|min:0', // Validate each percentage field
@@ -42,18 +42,18 @@ class PlacementRequest extends FormRequest
             'name' => 'required|array',
             'name.*' => 'required|string',
 
-            'amount' => 'required|array',
-            'amount.*' => 'required|numeric',
+            'amount' => 'nullable|array',
+            'amount.*' => 'nullable|numeric',
 
-            'rate' => 'required|array',
+            'rate' => 'nullable|array',
 
             'rate.*' => 'numeric',
 
-            'date' => 'required|array',
+            'date' => 'nullable|array',
 
             'date.*' => 'nullable|date',
 
-            'comments' => 'required|array',
+            'comments' => 'nullable|array',
 
             'comments.*' => 'nullable|string',
 

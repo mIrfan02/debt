@@ -15,6 +15,8 @@
                         }
                     @endphp
 
+                        <a href="{{ route('claims.index') }}" class="btn btn-primary mb-3">Back to claims</a>
+
                     <form action="{{ route('claims.store') }}" method="post">
                         @csrf
 
@@ -25,7 +27,8 @@
                         <div class="row">
                             <div class="mb-3 col-md-6">
                                 @if ($debtorId != null)
-                                    <label for="debtor_person" class="form-label">Debtor Person</label>
+                                    <label for="debtor_person" class="form-label">Debtor Person <span
+                                            class="text-danger">*</span></label>
                                     <input type="text"
                                         class="form-control @error('debtor_person') is-invalid @enderror"
                                         name="debtor_person"
@@ -35,7 +38,8 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 @else
-                                    <label for="debtor_person" class="form-label">Debtor Person</label>
+                                    <label for="debtor_person" class="form-label">Debtor Person <span
+                                            class="text-danger">*</span></label>
 
                                     <select class="form-control @error('debtor_person') is-invalid @enderror"
                                         name="debtor_person">
@@ -83,18 +87,46 @@
 
                             <div class="mb-3 col-md-6">
                                 <label for="type_of_debt" class="form-label">Type of Debt</label>
-                                <input type="text" class="form-control @error('type_of_debt') is-invalid @enderror"
-                                    name="type_of_debt" value="{{ old('type_of_debt') }}" required>
+                                <select name="type_of_debt" id="type_of_debt"
+                                    class="form-control @error('type_of_debt') is-invalid @enderror" required>
+                                    <option value="">Select Type of Debt</option>
+                                    <option value="Not Assigned">Not Assigned</option>
+                                    <option value="Ambulance">Ambulance</option>
+                                    <option value="Auto lease">Auto lease</option>
+                                    <option value="Auto loan">Auto loan</option>
+                                    <option value="Car loan">Car loan</option>
+                                    <option value="Charge card">Charge card</option>
+                                    <option value="Child support">Child support</option>
+                                    <option value="Commercial">Commercial</option>
+                                    <option value="Consumer">Consumer</option>
+                                    <option value="Credit card">Credit card</option>
+                                    <option value="Dental">Dental</option>
+                                    <option value="Doctor">Doctor</option>
+                                    <option value="Home loan">Home loan</option>
+                                    <option value="Hospital">Hospital</option>
+                                    <option value="Legal services">Legal services</option>
+                                    <option value="Loan">Loan</option>
+                                    <option value="Medical">Medical</option>
+                                    <option value="Rent">Rent</option>
+                                    <option value="Secured loan">Secured loan</option>
+                                    <option value="Services rendered">Services rendered</option>
+                                    <option value="Spousal support">Spousal support</option>
+                                    <option value="Student loan">Student loan</option>
+                                    <option value="Unsecured loan">Unsecured loan</option>
+                                    <option value="Utility">Utility</option>
+                                </select>
                                 @error('type_of_debt')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
                         </div>
 
                         <!-- Placement Amount -->
                         <div class="row">
                             <div class="mb-3 col-md-6">
-                                <label for="placement_amount" class="form-label">Placement Amount</label>
+                                <label for="placement_amount" class="form-label">Placement Amount <span
+                                        class="text-danger">*</span></label>
                                 <input type="number"
                                     class="form-control @error('placement_amount') is-invalid @enderror"
                                     name="placement_amount" step="0.01" value="{{ old('placement_amount') }}"
@@ -117,7 +149,8 @@
                         <!-- Interest Start Date and Pre-Judgment Interest -->
                         <div class="row">
                             <div class="mb-3 col-md-6">
-                                <label for="interest_start_date" class="form-label">Interest Start Date</label>
+                                <label for="interest_start_date" class="form-label">Interest Start Date <span
+                                        class="text-danger">*</span></label>
                                 <input type="date"
                                     class="form-control @error('interest_start_date') is-invalid @enderror"
                                     name="interest_start_date" value="{{ old('interest_start_date') }}" required>
@@ -152,13 +185,20 @@
                             </div>
 
                             <div class="mb-3 col-md-6">
-                                <label for="client" class="form-label">Client</label>
-                                <input type="text" class="form-control @error('client') is-invalid @enderror"
-                                    name="client" value="{{ old('client') }}" required>
-                                @error('client')
+                                <label for="client_id" class="form-label">Client <span
+                                        class="text-danger">*</span></label>
+                                <select name="client_id" id="client_id"
+                                    class="form-control @error('client_id') is-invalid @enderror" required>
+                                    <option value="">Select Client</option>
+                                    @foreach ($clients as $client)
+                                        <option value="{{ $client->id }}">{{ $client->person }}</option>
+                                    @endforeach
+                                </select>
+                                @error('client_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
                         </div>
 
                         <!-- Creditor and Claim Number -->
@@ -205,7 +245,12 @@
                                         }
 
                                         // Format the claim number with exactly four digits in the middle part
-                                        $generatedClaimNumber = sprintf('%s-%04d-%02d', now()->year, $nextMiddlePart, $nextClaimNumber);
+                                        $generatedClaimNumber = sprintf(
+                                            '%s-%04d-%02d',
+                                            now()->year,
+                                            $nextMiddlePart,
+                                            $nextClaimNumber,
+                                        );
                                     } else {
                                         // If there are no existing records, start with 1 and middle part as 0
                                         $generatedClaimNumber = sprintf('%s-%04d-%02d', now()->year, 0, 1);
@@ -246,25 +291,54 @@
 
                             <div class="mb-3 col-md-6">
                                 <label for="status" class="form-label">Status</label>
-                                <input type="text" class="form-control @error('status') is-invalid @enderror"
-                                    name="status" value="{{ old('status') }}" required>
+                                <select name="status" id="status"
+                                    class="form-control @error('status') is-invalid @enderror" required>
+                                    <option value="">Select Status</option>
+                                    <option value="A. Claim received">A. Claim received</option>
+                                    <option value="B. Demand letter sent">B. Demand letter sent</option>
+                                    <option value="C. Payments received">C. Payments received</option>
+                                    <option value="C1. Receiving payments on note">C1. Receiving payments on note
+                                    </option>
+                                    <option value="Case Suspend">Case Suspend</option>
+                                    <option value="E. Complaint served">E. Complaint served</option>
+                                    <option value="F. Answer filed">F. Answer filed</option>
+                                    <option value="F1. Discovery">F1. Discovery</option>
+                                    <option value="First Demand Letter">First Demand Letter</option>
+                                    <option value="G. Judgment entered">G. Judgment entered</option>
+                                    <option value="I. Levy underway">I. Levy underway</option>
+                                    <option value="J. Garnishment">J. Garnishment</option>
+                                    <option value="L. Case closed">L. Case closed</option>
+                                    <option value="M. Bankruptcy Chapter 7">M. Bankruptcy Chapter 7</option>
+                                    <option value="Q. Opened File">Q. Opened File</option>
+                                </select>
                                 @error('status')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
                         </div>
 
                         <!-- Method Contingency and Remarks -->
                         <div class="row">
                             <div class="mb-3 col-md-6">
-                                <label for="method_contingency" class="form-label">Method Contingency</label>
-                                <input type="text"
-                                    class="form-control @error('method_contingency') is-invalid @enderror"
-                                    name="method_contingency" value="{{ old('method_contingency') }}" required>
+                                <label for="method_contingency" class="form-label">Method Contingency <span class="text-danger">*</span></label>
+                                <select name="method_contingency" id="contingency_method" class="form-control">
+                                    <option value="none">None</option>
+                                    <option value="sliding_scale">Sliding scale</option>
+                                    <option value="fixed_rate">Fixed rate</option>
+                                    <option value="flat_fee">Flat Fee</option>
+                                    {{-- <option value="full_amount">Full Amount </option>
+                                    <option value="hourly_rate">Hourly Rate </option> --}}
+                                </select>
                                 @error('method_contingency')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+
+
+
+
 
                             <div class="mb-3 col-md-6">
                                 <label for="remarks" class="form-label">Remarks</label>

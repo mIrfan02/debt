@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Log;
+use App\Models\Client;
 use App\Models\Debtor;
 use App\Models\TicklerType;
 use Illuminate\Http\Request;
@@ -47,8 +48,10 @@ class ClaimController extends Controller
             $debtorId=null;
             $roles = Role::all();
 
+            $clients=Client::all();
+
             $debtorInfo=Debtor::all();
-            return view($this->_directory . '.create',compact('debtorId','debtorInfo','roles'));
+            return view($this->_directory . '.create',compact('debtorId','debtorInfo','roles','clients'));
 
         }
 

@@ -23,9 +23,9 @@ class PaymentRequest extends FormRequest
     {
         return [
         'claim_id'=>'required',
-        'payment_method' => 'required|string',
+        'payment_method' => 'nullable|string',
         'amount' => 'required|numeric|min:0.01',
-        'comment' => 'required|string',
+        'comment' => 'nullable|string',
         'date_paid' => 'required|date',
         'category' => 'nullable|string',
         'debtor_claim_number' => 'nullable|string',

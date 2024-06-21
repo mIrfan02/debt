@@ -84,9 +84,6 @@ class PaymentService
         // dd($accumulatedInterest,$formattedAccumulatedInterest,$data['interest']);
 
 
-
-
-
         if ($placement) {
             $this->add($this->_model, $data);
 
@@ -702,10 +699,6 @@ private function allocateCIP($claim, $paymentAmount, $data)
 }
 
 
-
-
-
-
 private function allocatePCI($claim, $paymentAmount, $data)
 {
     $remainingAmount = $paymentAmount; // Track remaining amount to allocate
@@ -720,6 +713,38 @@ private function allocatePCI($claim, $paymentAmount, $data)
         'client' => 0,
     ];
 
+    // Helper function to process sliding scale
+    $applySlidingScale = function($deductAmount, $slidingScale) use (&$deductedAmounts) {
+        $totalDeducted = 0;
+        $agency = 0;
+        $client = 0;
+
+        foreach ($slidingScale as $percentage => $amount) {
+            if ($deductAmount > $totalDeducted + $amount) {
+                $agency += ($amount * $percentage) / 100;
+                $client += $amount - ($amount * $percentage) / 100;
+                $totalDeducted += $amount;
+            } else {
+                $remainingForScale = $deductAmount - $totalDeducted;
+                $agency += ($remainingForScale * $percentage) / 100;
+                $client += $remainingForScale - ($remainingForScale * $percentage) / 100;
+                $totalDeducted += $remainingForScale;
+                break;
+            }
+        }
+
+        // If there's remaining amount beyond the sliding scale limits, apply the last percentage
+        if ($deductAmount > $totalDeducted) {
+            $lastPercentage = array_key_last($slidingScale);
+            $remainingForLastScale = $deductAmount - $totalDeducted;
+            $agency += ($remainingForLastScale * $lastPercentage) / 100;
+            $client += $remainingForLastScale - ($remainingForLastScale * $lastPercentage) / 100;
+        }
+
+        $deductedAmounts['agency'] += $agency;
+        $deductedAmounts['client'] += $client;
+    };
+
     // Deduct from remaining principle and divide between agency and client
     while ($claim->remaining_principle > 0 && $remainingAmount > 0) {
         $deductAmount = min($remainingAmount, $claim->remaining_principle);
@@ -729,6 +754,7 @@ private function allocatePCI($claim, $paymentAmount, $data)
         // Divide the deducted amount between agency and client using the formula
         if ($deductAmount > 0) {
             $methodRate = json_decode($placement->method_rate, true);
+            $slidingScale = json_decode($placement->sliding_scale, true);
 
             if (isset($methodRate['fixed_rate'])) {
                 $ratePercentage = $methodRate['fixed_rate'];
@@ -739,6 +765,11 @@ private function allocatePCI($claim, $paymentAmount, $data)
                 $deductedAmounts['principle'] += $deductAmount;
                 $deductedAmounts['agency'] += $agency;
                 $deductedAmounts['client'] += $client;
+            } elseif ($slidingScale) {
+                $applySlidingScale($deductAmount, $slidingScale);
+
+                // Accumulate the deducted amounts
+                $deductedAmounts['principle'] += $deductAmount;
             }
         }
     }
@@ -765,6 +796,7 @@ private function allocatePCI($claim, $paymentAmount, $data)
             // Divide the deducted amount between agency and client using the formula
             if ($deductAmount > 0) {
                 $methodRate = json_decode($placement->method_rate, true);
+                $slidingScale = json_decode($placement->sliding_scale, true);
 
                 if (isset($methodRate['fixed_rate'])) {
                     $ratePercentage = $methodRate['fixed_rate'];
@@ -775,6 +807,11 @@ private function allocatePCI($claim, $paymentAmount, $data)
                     $deductedAmounts['interest'] += $deductAmount;
                     $deductedAmounts['agency'] += $agency;
                     $deductedAmounts['client'] += $client;
+                } elseif ($slidingScale) {
+                    $applySlidingScale($deductAmount, $slidingScale);
+
+                    // Accumulate the deducted amounts
+                    $deductedAmounts['interest'] += $deductAmount;
                 }
             }
         }
@@ -799,6 +836,101 @@ private function allocatePCI($claim, $paymentAmount, $data)
     // Save the updated claim
     $claim->save();
 }
+
+
+// private function allocatePCI($claim, $paymentAmount, $data)
+// {
+//     $remainingAmount = $paymentAmount; // Track remaining amount to allocate
+//     $placement = Placement::where('claim_id', $claim->id)->first();
+
+//     // Initialize log data arrays
+//     $deductedAmounts = [
+//         'principle' => 0,
+//         'cost' => 0,
+//         'interest' => 0,
+//         'agency' => 0,
+//         'client' => 0,
+//     ];
+
+//     // Deduct from remaining principle and divide between agency and client
+//     while ($claim->remaining_principle > 0 && $remainingAmount > 0) {
+//         $deductAmount = min($remainingAmount, $claim->remaining_principle);
+//         $claim->remaining_principle -= $deductAmount;
+//         $remainingAmount = max(0, $remainingAmount - $deductAmount); // Ensure remaining amount is non-negative
+
+//         // Divide the deducted amount between agency and client using the formula
+//         if ($deductAmount > 0) {
+//             $methodRate = json_decode($placement->method_rate, true);
+
+//             if (isset($methodRate['fixed_rate'])) {
+//                 $ratePercentage = $methodRate['fixed_rate'];
+//                 $agency = ($deductAmount * $ratePercentage) / 100;
+//                 $client = $deductAmount - $agency;
+
+//                 // Accumulate the deducted amounts
+//                 $deductedAmounts['principle'] += $deductAmount;
+//                 $deductedAmounts['agency'] += $agency;
+//                 $deductedAmounts['client'] += $client;
+//             }
+//         }
+//     }
+
+//     // Deduct from remaining cost without dividing between agency and client
+//     if ($claim->remaining_principle == 0 && $claim->remaining_cost > 0) {
+//         while ($claim->remaining_cost > 0 && $remainingAmount > 0) {
+//             $deductAmount = min($remainingAmount, $claim->remaining_cost);
+//             $claim->remaining_cost -= $deductAmount;
+//             $remainingAmount = max(0, $remainingAmount - $deductAmount); // Ensure remaining amount is non-negative
+
+//             // Accumulate the deducted amounts
+//             $deductedAmounts['cost'] += $deductAmount;
+//         }
+//     }
+
+//     // Deduct from accumulated interest and divide between agency and client
+//     if ($claim->remaining_principle == 0 && $claim->remaining_cost == 0 && $remainingAmount > 0) {
+//         while ($claim->accumulated_interest > 0 && $remainingAmount > 0) {
+//             $deductAmount = min($remainingAmount, $claim->accumulated_interest);
+//             $claim->accumulated_interest -= $deductAmount;
+//             $remainingAmount = max(0, $remainingAmount - $deductAmount); // Ensure remaining amount is non-negative
+
+//             // Divide the deducted amount between agency and client using the formula
+//             if ($deductAmount > 0) {
+//                 $methodRate = json_decode($placement->method_rate, true);
+
+//                 if (isset($methodRate['fixed_rate'])) {
+//                     $ratePercentage = $methodRate['fixed_rate'];
+//                     $agency = ($deductAmount * $ratePercentage) / 100;
+//                     $client = $deductAmount - $agency;
+
+//                     // Accumulate the deducted amounts
+//                     $deductedAmounts['interest'] += $deductAmount;
+//                     $deductedAmounts['agency'] += $agency;
+//                     $deductedAmounts['client'] += $client;
+//                 }
+//             }
+//         }
+//     }
+
+//     // Prepare log data
+//     $data['deducted_principle'] = $deductedAmounts['principle'];
+//     $data['deducted_cost'] = $deductedAmounts['cost'];
+//     $data['deducted_interest'] = $deductedAmounts['interest'];
+//     $data['agency'] = $deductedAmounts['agency'];
+//     $data['client'] = $deductedAmounts['client'];
+
+//     $logData = [
+//         'log_type' => 'payment',
+//         'data' => $data,
+//         'claim_id' => $claim->id,
+//     ];
+
+//     // Log the allocation at once
+//     Log::create($logData);
+
+//     // Save the updated claim
+//     $claim->save();
+// }
 
 
 

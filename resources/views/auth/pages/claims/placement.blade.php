@@ -23,19 +23,18 @@
          <div class="row">
              <div class="mb-3 col-md-6">
                  <label for="placement_date" class="form-label">Placement Date:</label>
-                 <input type="date" name="placement_date" id="placement_date" class="form-control">
+                 <input type="date" name="placement_date" id="placement_date" class="form-control" value="{{ $data->placement->placement_date ?? ' ' }}">
              </div>
 
              <div class="mb-3 col-md-6">
                  <label for="contingency_method" class="form-label">Contingency Method:</label>
                  <select name="contigency_method" id="contingency_method" class="form-control">
-                     <option value="none">None</option>
-                     <option value="sliding_scale">Sliding scale</option>
-                     <option value="fixed_rate">Fixed rate</option>
-                     <option value="flat_fee">Flat Fee</option>
-                     {{-- <option value="full_amount">Full Amount </option>
-                     <option value="hourly_rate">Hourly Rate </option> --}}
-                 </select>
+                    <option value="none" {{ (isset($data->placement->contigency_method) && $data->placement->contigency_method == 'none') ? 'selected' : '' }}>None</option>
+                    <option value="sliding_scale" {{ (isset($data->placement->contigency_method) && $data->placement->contigency_method == 'sliding_scale') ? 'selected' : '' }}>Sliding scale</option>
+                    <option value="fixed_rate" {{ (isset($data->placement->contigency_method) && $data->placement->contigency_method == 'fixed_rate') ? 'selected' : '' }}>Fixed rate</option>
+                    <option value="flat_fee" {{ (isset($data->placement->contigency_method) && $data->placement->contigency_method == 'flat_fee') ? 'selected' : '' }}>Flat Fee</option>
+
+                </select>
              </div>
 
 
@@ -103,22 +102,25 @@
 
              <div class="mb-3 col-md-6">
                  <label for="interest_start_date" class="form-label">Interest Start Date:</label>
-                 <input type="date" name="interest_start_date" id="interest_start_date" class="form-control">
+                 <input type="date" name="interest_start_date" value="{{ $data->placement->interest_start_date }}" id="interest_start_date" class="form-control">
              </div>
 
 
              <div class="mb-3 col-md-6">
                  <label for="allocation_method" class="form-label">Allocation Method:</label>
                  <select name="allocation_method" id="allocation_method" class="form-control">
-                     <option value="none">None</option>
-                     <option value="CIP">CIP</option>
-                     <option value="CPI">CPI</option>
-                     <option value="PCI">PCI</option>
-                     <option value="PIC">PIC</option>
-                     <option value="IPC">IPC</option>
-                     <option value="ICP">ICP</option>
+                    <option value="none" {{ (isset($data->placement->allocation_method) && $data->placement->allocation_method == 'none') ? 'selected' : '' }}>None</option>
+                     <option value="CIP" {{ (isset($data->placement->allocation_method) && $data->placement->allocation_method == 'CIP') ? 'selected' : '' }}>CIP</option>
+                     <option value="CPI"{{ (isset($data->placement->allocation_method) && $data->placement->allocation_method == 'CPI') ? 'selected' : '' }}>CPI</option>
+                     <option value="PCI"{{ (isset($data->placement->allocation_method) && $data->placement->allocation_method == 'PCI') ? 'selected' : '' }}>PCI</option>
+                     <option value="PIC"{{ (isset($data->placement->allocation_method) && $data->placement->allocation_method == 'PIC') ? 'selected' : '' }}>PIC</option>
+                     <option value="IPC"{{ (isset($data->placement->allocation_method) && $data->placement->allocation_method == 'IPC') ? 'selected' : '' }}>IPC</option>
+                     <option value="ICP"{{ (isset($data->placement->allocation_method) && $data->placement->allocation_method == 'ICP') ? 'selected' : '' }}>ICP</option>
                  </select>
              </div>
+
+
+
 
 
          </div>
@@ -129,7 +131,7 @@
 
              <div class="mb-3 col-md-6">
                  <label for="interest_rate" class="form-label">Interest Rate:</label>
-                 <input type="number" name="interest_rate" id="interest_rate" class="form-control" min="0"
+                 <input type="number" name="interest_rate" id="interest_rate" value="{{ $data->placement->interest_rate }}" class="form-control" min="0"
                      max="100" step="0.01" oninput="updateInterestRate()">
                  <span id="interestRateDisplay"></span>
 
@@ -157,32 +159,31 @@
              <div class="mb-3 col-md-6">
                  <label for="debt_type" class="form-label">Debt Type:</label>
                  <select name="debt_type" id="debt_type" class="form-control">
-                     <option value="none">None</option>
-
-                     <option value="Ambulance">Ambulance</option>
-                     <option value="Auto lease">Auto Lease</option>
-                     <option value="Auto loan">Auto loan</option>
-                     <option value="car loan">Car loan</option>
-                     <option value="charge card">Charge card</option>
-                     <option value="child support">Child support</option>
-                     <option value="commercial">Commercial</option>
-                     <option value="consumer">Consumer</option>
-                     <option value="credit card">Credit card</option>
-                     <option value="dental">Dental</option>
-                     <option value="doctor">Doctor</option>
-                     <option value="home loan">Home loan</option>
-                     <option value="hospital">Hospital</option>
-                     <option value="legal services">Legal services</option>
-                     <option value="loan">Loan</option>
-                     <option value="medical">Medical</option>
-                     <option value="rent">Rent</option>
-                     <option value="secured loan">Secured loan</option>
-                     <option value="services rendered">Services rendered</option>
-                     <option value="spousal support">Spousal support</option>
-                     <option value="student loan">Student loan</option>
-                     <option value="unsecured loan">Unsecured loan</option>
-                     <option value="utility">Utility</option>
-                 </select>
+                    <option value="none" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'none') ? 'selected' : '' }}>None</option>
+                    <option value="Ambulance" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'Ambulance') ? 'selected' : '' }}>Ambulance</option>
+                    <option value="Auto lease" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'Auto lease') ? 'selected' : '' }}>Auto Lease</option>
+                    <option value="Auto loan" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'Auto loan') ? 'selected' : '' }}>Auto Loan</option>
+                    <option value="car loan" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'car loan') ? 'selected' : '' }}>Car Loan</option>
+                    <option value="charge card" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'charge card') ? 'selected' : '' }}>Charge Card</option>
+                    <option value="child support" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'child support') ? 'selected' : '' }}>Child Support</option>
+                    <option value="commercial" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'commercial') ? 'selected' : '' }}>Commercial</option>
+                    <option value="consumer" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'consumer') ? 'selected' : '' }}>Consumer</option>
+                    <option value="credit card" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'credit card') ? 'selected' : '' }}>Credit Card</option>
+                    <option value="dental" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'dental') ? 'selected' : '' }}>Dental</option>
+                    <option value="doctor" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'doctor') ? 'selected' : '' }}>Doctor</option>
+                    <option value="home loan" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'home loan') ? 'selected' : '' }}>Home Loan</option>
+                    <option value="hospital" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'hospital') ? 'selected' : '' }}>Hospital</option>
+                    <option value="legal services" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'legal services') ? 'selected' : '' }}>Legal Services</option>
+                    <option value="loan" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'loan') ? 'selected' : '' }}>Loan</option>
+                    <option value="medical" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'medical') ? 'selected' : '' }}>Medical</option>
+                    <option value="rent" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'rent') ? 'selected' : '' }}>Rent</option>
+                    <option value="secured loan" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'secured loan') ? 'selected' : '' }}>Secured Loan</option>
+                    <option value="services rendered" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'services rendered') ? 'selected' : '' }}>Services Rendered</option>
+                    <option value="spousal support" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'spousal support') ? 'selected' : '' }}>Spousal Support</option>
+                    <option value="student loan" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'student loan') ? 'selected' : '' }}>Student Loan</option>
+                    <option value="unsecured loan" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'unsecured loan') ? 'selected' : '' }}>Unsecured Loan</option>
+                    <option value="utility" {{ (isset($data->placement->debt_type) && $data->placement->debt_type == 'utility') ? 'selected' : '' }}>Utility</option>
+                </select>
              </div>
 
 
@@ -201,107 +202,88 @@
 
          <!-- Principal -->
          <div class="row">
-             <div class="mb-3 col-md-2">
-                 <label for="principal_name" class="form-label"> Name:</label>
-                 <input type="text" name="name[]" id="principal_name" class="form-control" value="principal"
-                     readonly>
-             </div>
+             <input type="hidden" name="name[]" value="principal">
              <div class="mb-3 col-md-2">
                  <label for="principal_amount" class="form-label"> Amount:</label>
-                 <input type="number" name="amount[]" id="principal_amount" class="form-control">
+                 <input type="number" name="amount[]" id="principal_amount" class="form-control" value="{{$data->placement_amount }}">
              </div>
-
              <div class="mb-3 col-md-2">
                  <label for="principal_rate" class="form-label"> Rate:</label>
-                 <input type="number" name="rate[]" id="principal_rate" class="form-control" min="0"
-                     max="100" step="0.01">
+                 <input type="number" name="rate[]" id="principal_rate" class="form-control" min="0" max="100" step="0.01" value="{{ $data->placement->placementComponent->where('name', 'principal')->first()->rate ?? '' }}">
              </div>
-
              <div class="mb-3 col-md-2">
                  <label for="principal_date" class="form-label"> Date:</label>
-                 <input type="date" name="date[]" id="principal_date" class="form-control">
+                 <input type="date" name="date[]" id="principal_date" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'principal')->first()->date ?? '' }}">
              </div>
-
              <div class="mb-3 col-md-2">
                  <label for="principal_comments" class="form-label"> Comments:</label>
-                 <input type="text" name="comments[]" id="principal_comments" class="form-control" />
+                 <input type="text" name="comments[]" id="principal_comments" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'principal')->first()->comments ?? '' }}">
              </div>
          </div>
 
          <!-- Cost -->
          <div class="row">
+             <input type="hidden" name="name[]" value="cost">
              <div class="mb-3 col-md-2">
-                 <input type="text" name="name[]" id="cost_name" class="form-control" value="Cost" readonly>
+                 <label for="cost_amount" class="form-label"> Amount:</label>
+                 <input type="number" name="amount[]" id="cost_amount" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'cost')->first()->amount ?? '' }}">
              </div>
-
              <div class="mb-3 col-md-2">
-                 <input type="number" name="amount[]" id="cost_amount" class="form-control">
+                 <label for="cost_rate" class="form-label"> Rate:</label>
+                 <input type="number" name="rate[]" id="cost_rate" class="form-control" min="0" max="100" step="0.01" value="{{ $data->placement->placementComponent->where('name', 'cost')->first()->rate ?? '' }}">
              </div>
-
              <div class="mb-3 col-md-2">
-                 <input type="number" name="rate[]" id="cost_rate" class="form-control" min="0"
-                     max="100" step="0.01">
+                 <label for="cost_date" class="form-label"> Date:</label>
+                 <input type="date" name="date[]" id="cost_date" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'cost')->first()->date ?? '' }}">
              </div>
-
              <div class="mb-3 col-md-2">
-                 <input type="date" name="date[]" id="cost_date" class="form-control">
-             </div>
-
-             <div class="mb-3 col-md-2">
-                 <input type="text" name="comments[]" id="cost_comments" class="form-control" />
+                 <label for="cost_comments" class="form-label"> Comments:</label>
+                 <input type="text" name="comments[]" id="cost_comments" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'cost')->first()->comments ?? '' }}">
              </div>
          </div>
 
          <!-- Attorney -->
          <div class="row">
-             <div class="mb-3  col-md-2">
-                 <input type="text" name="name[]" id="attorney_name" class="form-control" value="Attorney"
-                     readonly>
+             <input type="hidden" name="name[]" value="attorney">
+             <div class="mb-3 col-md-2">
+                 <label for="attorney_amount" class="form-label"> Amount:</label>
+                 <input type="number" name="amount[]" id="attorney_amount" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'attorney')->first()->amount ?? '' }}">
              </div>
-
-             <div class="mb-3  col-md-2">
-                 <input type="number" name="amount[]" id="attorney_amount" class="form-control">
+             <div class="mb-3 col-md-2">
+                 <label for="attorney_rate" class="form-label"> Rate:</label>
+                 <input type="number" name="rate[]" id="attorney_rate" class="form-control" min="0" max="100" step="0.01" value="{{ $data->placement->placementComponent->where('name', 'attorney')->first()->rate ?? '' }}">
              </div>
-
-             <div class="mb-3  col-md-2">
-                 <input type="number" name="rate[]" id="attorney_rate" class="form-control" min="0"
-                     max="100" step="0.01">
+             <div class="mb-3 col-md-2">
+                 <label for="attorney_date" class="form-label"> Date:</label>
+                 <input type="date" name="date[]" id="attorney_date" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'attorney')->first()->date ?? '' }}">
              </div>
-
-             <div class="mb-3  col-md-2">
-                 <input type="date" name="date[]" id="attorney_date" class="form-control">
+             <div class="mb-3 col-md-2">
+                 <label for="attorney_comments" class="form-label"> Comments:</label>
+                 <input type="text" name="comments[]" id="attorney_comments" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'attorney')->first()->comments ?? '' }}">
              </div>
-
-             <div class="mb-3  col-md-2">
-                 <input type="text" name="comments[]" id="attorney_comments" class="form-control" />
-             </div>
-
          </div>
 
          <!-- Interest -->
          <div class="row">
+             <input type="hidden" name="name[]" value="interest">
              <div class="mb-3 col-md-2">
-                 <input type="text" name="name[]" id="interest_name" class="form-control" value="Interest"
-                     readonly>
+                 <label for="interest_amount" class="form-label"> Amount:</label>
+                 <input type="number" name="amount[]" id="interest_amount" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'interest')->first()->amount ?? '' }}">
              </div>
-
              <div class="mb-3 col-md-2">
-                 <input type="number" name="amount[]" id="interest_amount" class="form-control">
+                 <label for="interest_rate" class="form-label"> Rate:</label>
+                 <input type="number" name="rate[]" id="interest_rate" class="form-control" min="0" max="100" step="0.01" value="{{ $data->placement->placementComponent->where('name', 'interest')->first()->rate ?? '' }}">
              </div>
-
              <div class="mb-3 col-md-2">
-                 <input type="number" name="rate[]" id="interest_rate" class="form-control" min="0"
-                     max="100" step="0.01">
+                 <label for="interest_date" class="form-label"> Date:</label>
+                 <input type="date" name="date[]" id="interest_date" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'interest')->first()->date ?? '' }}">
              </div>
-
              <div class="mb-3 col-md-2">
-                 <input type="date" name="date[]" id="interest_date" class="form-control">
-             </div>
-
-             <div class="mb-3 col-md-2">
-                 <input type="text" name="comments[]" id="interest_comments" class="form-control" />
+                 <label for="interest_comments" class="form-label"> Comments:</label>
+                 <input type="text" name="comments[]" id="interest_comments" class="form-control" value="{{ $data->placement->placementComponent->where('name', 'interest')->first()->comments ?? '' }}">
              </div>
          </div>
+
          <h4>Additions to Placement</h4>
          <div id="additionFieldsContainer">
              <!-- Initial Row -->
@@ -381,7 +363,7 @@
                 <label for="principal_comments_${paddedCount}" class="form-label">Comments:</label>
                 <input type="text" name="comments[]" id="principal_comments_${paddedCount}" class="form-control" />
             </div>
-           
+
         </div>
     `;
 
