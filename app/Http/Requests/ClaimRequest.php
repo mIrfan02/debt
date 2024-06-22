@@ -42,7 +42,7 @@ class ClaimRequest extends FormRequest
                 'collector' => 'nullable|string|max:255',
                 'method_contingency' => 'required|string|max:255',
                 'debtor_id,' => 'nullable',
-                'client_id'=>'required'|
+                'client_id'=>'required',
 
                 // 'client_claim_no'=> 'nullable',
                 // 'creditor_claim_no'=>'nullable',
